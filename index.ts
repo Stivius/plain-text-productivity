@@ -4,6 +4,7 @@ import prompt from 'prompt';
 import dateFormat from 'dateformat'
 import chalk from 'chalk';
 import chain, {filter, sumBy} from 'lodash'
+import columnify from 'columnify'
 
 const commandsDefinitions = [
   { name: 'command', defaultOption: true },
@@ -154,6 +155,20 @@ async function readRecordFromConsole(projects: string[], enterDate = false) {
 		})
 	});
 
+	return prompt.get(schema);
+}
+
+function formatDataForFile(data) {
+	return Object.keys(data).map((k) => {
+		if (k !== 'Date') {
+			return `${k}:${data[k]}`
+		} else {
+			return `${data[k]}`;
+		}
+	}).join('\n').concat('\n');
+}
+
+function outputDataToConsole(data) {
 	const colorizeMark = (value: string) => {
 		switch (value) {
 			case '1': return chalk.rgb(150, 0, 0).bold(value); 
@@ -165,14 +180,16 @@ async function readRecordFromConsole(projects: string[], enterDate = false) {
 		return chalk.white(value);
 	};
 
-	const results = await prompt.get(schema);
-	return Object.keys(results).map((k) => {
-		if (k !== 'Date') {
-			return `${chalk.yellow(k)}\t\t${colorizeMark(results[k] as string)}`
-		} else {
-			return `${chalk.blue(results[k])}`;
-		}
-	}).join('\n').concat('\n');
+	const DATE_KEY = 'Date';
+	if (data.hasOwnProperty(DATE_KEY)) {
+		console.log(`${chalk.blue(data[DATE_KEY])}`);
+		delete data[DATE_KEY];
+	}
+
+	console.log(columnify(Object.keys(data).map((k) => ({
+		project: chalk.yellow(k),
+		mark: colorizeMark(data[k] as string),
+	}))));
 }
 
 async function readRangeDateFromConsole() {
@@ -291,14 +308,17 @@ async function main() {
 		switch (commands.command) {
 			case 'add': {
 				const enteredData = await readRecordFromConsole(data.metadata.projects);
-				console.log(chalk.blue(dateFormat(new Date(), "yyyy-mm-dd")));
-				console.log(enteredData);
+				const date = dateFormat(new Date(), "yyyy-mm-dd");
+				console.log(chalk.blue(date));
+				outputDataToConsole(enteredData);
+				fs.appendFileSync('productivity.txt', date.concat('\n', formatDataForFile(enteredData), '\n'));
 				break;
 			}
 
 			case 'addp': {
 				const enteredData = await readRecordFromConsole(data.metadata.projects, true);
-				console.log(enteredData);
+				outputDataToConsole(enteredData);
+				fs.appendFileSync('productivity.txt', formatDataForFile(enteredData).concat('\n'));
 				break;
 			}
 
@@ -354,14 +374,15 @@ async function main() {
 					const filteredGroup = filter(group, (assesed) => assesed.mark !== undefined);
 					return { name: groupName, mark: groupSum / filteredGroup.length };
 				});
-				const maxMarkFromAverages = averageMarkByProject.map(p => p.mark).max();
+				const maxMarkFromAverages = averageMarkByProject.map(p => p.mark - 1).max();
 
-				const MAX_MARK = 5;
 				const productivityByProject = averageMarkByProject.map((value) => {
+					const mark = value.mark - 1;
+					const MAX_MARK = 4;
 					if (options.absolute) {
-						return { name: value.name, productivity: value.mark / MAX_MARK };
+						return { name: value.name, productivity: mark / MAX_MARK };
 					}
-					return { name: value.name, productivity: value.mark / maxMarkFromAverages };
+					return { name: value.name, productivity: mark / maxMarkFromAverages };
 				});
 
 				const colorizeProductivity = (value: number) => {
@@ -391,13 +412,16 @@ async function main() {
 				const realtiveness = options.absolute ? 'Absolute' : 'Relative';
 
 				console.log(`${choiceToString[choice]} ${realtiveness} Report for range ${chalk.blue(dateFormat(from, "yyyy-mm-dd"))} - ${chalk.blue(dateFormat(to, "yyyy-mm-dd"))}`);
-				productivityByProject.forEach((project) => {
-					console.log(`${chalk.yellow(project.name)}\t\t${colorizeProductivity(project.productivity)}`);
-				});
+				const outputData = productivityByProject.map((project) => ({
+					name: chalk.yellow(project.name), 
+					productivity: colorizeProductivity(project.productivity),
+				}));
+				console.log(columnify(outputData.value()));
 
 				// TODO:
 				// 1. Refactor for output
 				// 2. Write tests
+				// 3. Correctly tabulize output
 				break;
 			}
 			default:

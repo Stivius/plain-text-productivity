@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "ts-node index.ts",
+    "tool": "ts-node index.ts",
     "build": "tsc -p ."
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "columnify": "^1.6.0",
     "command-line-args": "^5.2.1",
     "dateformat": "^4.0.3",
     "lodash": "^4.17.21",
@@ -16,6 +17,7 @@
     "ts-node": "^10.8.0"
   },
   "devDependencies": {
+    "@types/columnify": "^1.5.1",
     "@types/command-line-args": "^5.2.0",
     "@types/dateformat": "^5.0.0",
     "@types/lodash": "^4.14.182",
