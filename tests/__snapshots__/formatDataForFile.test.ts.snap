@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`formatDataForFile records with date 1`] = `
+"2022-06-01
+Key1:Value1
+Key2:Value2
+Key3:Value3
+"
+`;
+
+exports[`formatDataForFile records without date 1`] = `
+"Key1:Value1
+Key2:Value2
+Key3:Value3
+"
+`;

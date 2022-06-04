@@ -1,0 +1,103 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`fileParser parse invalid file 1`] = `
+Object {
+  "metadata": Object {
+    "projects": Array [],
+  },
+  "records": Array [],
+}
+`;
+
+exports[`fileParser parse valid data 1`] = `
+Object {
+  "metadata": Object {
+    "projects": Array [
+      "First",
+      "Second",
+      "Third",
+    ],
+  },
+  "records": Array [
+    Object {
+      "day": 2022-05-22T00:00:00.000Z,
+      "projects": Array [
+        Object {
+          "mark": 1,
+          "name": "First",
+        },
+        Object {
+          "mark": 2,
+          "name": "Second",
+        },
+        Object {
+          "mark": 3,
+          "name": "Third",
+        },
+        Object {
+          "mark": 1,
+          "name": "Test",
+        },
+      ],
+    },
+    Object {
+      "day": 2022-05-23T00:00:00.000Z,
+      "projects": Array [
+        Object {
+          "mark": 4,
+          "name": "First",
+        },
+        Object {
+          "mark": 5,
+          "name": "Second",
+        },
+        Object {
+          "mark": 2,
+          "name": "Third",
+        },
+        Object {
+          "mark": undefined,
+          "name": "Test",
+        },
+        Object {
+          "mark": undefined,
+          "name": "Test2",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`fileParser parse valid data 2`] = `
+Object {
+  "metadata": Object {
+    "projects": Array [],
+  },
+  "records": Array [],
+}
+`;
+
+exports[`fileParser parse valid data 3`] = `
+Object {
+  "metadata": Object {
+    "projects": Array [
+      "First",
+      "a1234",
+      "abcd",
+    ],
+  },
+  "records": Array [],
+}
+`;
+
+exports[`fileParser parse valid data 4`] = `
+Object {
+  "metadata": Object {
+    "projects": Array [
+      "First",
+    ],
+  },
+  "records": Array [],
+}
+`;

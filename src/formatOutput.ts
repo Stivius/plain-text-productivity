@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import columnify from 'columnify'
 
+// TODO: Date should not be part of data
 export function formatDataForFile(data) {
 	return Object.keys(data).map((k) => {
 		if (k !== 'Date') {
@@ -11,6 +12,7 @@ export function formatDataForFile(data) {
 	}).join('\n').concat('\n');
 }
 
+// TODO: should not log here but just prepare output so it will be testable
 export function outputDataToConsole(data) {
 	const colorizeMark = (value: string) => {
 		switch (value) {

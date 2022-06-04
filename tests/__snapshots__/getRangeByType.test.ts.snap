@@ -1,0 +1,185 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getRangeByType check daily range 1`] = `
+Object {
+  "choice": 1,
+  "from": 2022-07-01T00:00:00.000Z,
+  "to": 2022-07-01T00:00:00.000Z,
+}
+`;
+
+exports[`getRangeByType check daily range 2`] = `
+Object {
+  "choice": 1,
+  "from": 2022-07-05T00:00:00.000Z,
+  "to": 2022-07-05T00:00:00.000Z,
+}
+`;
+
+exports[`getRangeByType check daily range 3`] = `
+Object {
+  "choice": 1,
+  "from": 2022-07-30T00:00:00.000Z,
+  "to": 2022-07-30T00:00:00.000Z,
+}
+`;
+
+exports[`getRangeByType check monthly range 1`] = `
+Object {
+  "choice": 3,
+  "from": 2022-07-01T00:00:00.000Z,
+  "to": 2022-07-01T00:00:00.000Z,
+}
+`;
+
+exports[`getRangeByType check monthly range 2`] = `
+Object {
+  "choice": 3,
+  "from": 2022-07-01T00:00:00.000Z,
+  "to": 2022-07-05T00:00:00.000Z,
+}
+`;
+
+exports[`getRangeByType check monthly range 3`] = `
+Object {
+  "choice": 3,
+  "from": 2022-07-01T00:00:00.000Z,
+  "to": 2022-07-30T00:00:00.000Z,
+}
+`;
+
+exports[`getRangeByType check n-days range 1`] = `
+Object {
+  "choice": 5,
+  "from": 2022-06-24T00:00:00.000Z,
+  "to": 2022-07-01T00:00:00.000Z,
+}
+`;
+
+exports[`getRangeByType check n-days range 2`] = `
+Object {
+  "choice": 6,
+  "from": 2022-06-17T00:00:00.000Z,
+  "to": 2022-07-01T00:00:00.000Z,
+}
+`;
+
+exports[`getRangeByType check n-days range 3`] = `
+Object {
+  "choice": 7,
+  "from": 2022-06-01T00:00:00.000Z,
+  "to": 2022-07-01T00:00:00.000Z,
+}
+`;
+
+exports[`getRangeByType check n-days range 4`] = `
+Object {
+  "choice": 8,
+  "from": 2022-04-02T00:00:00.000Z,
+  "to": 2022-07-01T00:00:00.000Z,
+}
+`;
+
+exports[`getRangeByType check n-days range 5`] = `
+Object {
+  "choice": 9,
+  "from": 2022-01-02T00:00:00.000Z,
+  "to": 2022-07-01T00:00:00.000Z,
+}
+`;
+
+exports[`getRangeByType check n-days range 6`] = `
+Object {
+  "choice": 10,
+  "from": 2021-07-01T00:00:00.000Z,
+  "to": 2022-07-01T00:00:00.000Z,
+}
+`;
+
+exports[`getRangeByType check weekly range 1`] = `
+Object {
+  "choice": 2,
+  "from": 2022-05-30T00:00:00.000Z,
+  "to": 2022-05-30T00:00:00.000Z,
+}
+`;
+
+exports[`getRangeByType check weekly range 2`] = `
+Object {
+  "choice": 2,
+  "from": 2022-05-30T00:00:00.000Z,
+  "to": 2022-05-31T00:00:00.000Z,
+}
+`;
+
+exports[`getRangeByType check weekly range 3`] = `
+Object {
+  "choice": 2,
+  "from": 2022-05-30T00:00:00.000Z,
+  "to": 2022-06-01T00:00:00.000Z,
+}
+`;
+
+exports[`getRangeByType check weekly range 4`] = `
+Object {
+  "choice": 2,
+  "from": 2022-05-30T00:00:00.000Z,
+  "to": 2022-06-02T00:00:00.000Z,
+}
+`;
+
+exports[`getRangeByType check weekly range 5`] = `
+Object {
+  "choice": 2,
+  "from": 2022-05-30T00:00:00.000Z,
+  "to": 2022-06-03T00:00:00.000Z,
+}
+`;
+
+exports[`getRangeByType check weekly range 6`] = `
+Object {
+  "choice": 2,
+  "from": 2022-05-30T00:00:00.000Z,
+  "to": 2022-06-04T00:00:00.000Z,
+}
+`;
+
+exports[`getRangeByType check weekly range 7`] = `
+Object {
+  "choice": 2,
+  "from": 2022-05-30T00:00:00.000Z,
+  "to": 2022-06-05T00:00:00.000Z,
+}
+`;
+
+exports[`getRangeByType check weekly range 8`] = `
+Object {
+  "choice": 2,
+  "from": 2022-06-06T00:00:00.000Z,
+  "to": 2022-06-06T00:00:00.000Z,
+}
+`;
+
+exports[`getRangeByType check yearly range 1`] = `
+Object {
+  "choice": 4,
+  "from": 2022-01-01T00:00:00.000Z,
+  "to": 2022-01-01T00:00:00.000Z,
+}
+`;
+
+exports[`getRangeByType check yearly range 2`] = `
+Object {
+  "choice": 4,
+  "from": 2022-01-01T00:00:00.000Z,
+  "to": 2022-07-15T00:00:00.000Z,
+}
+`;
+
+exports[`getRangeByType check yearly range 3`] = `
+Object {
+  "choice": 4,
+  "from": 2022-01-01T00:00:00.000Z,
+  "to": 2022-12-31T00:00:00.000Z,
+}
+`;

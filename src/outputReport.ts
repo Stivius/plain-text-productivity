@@ -28,6 +28,7 @@ const ChoiceToString = {
 
 
 // TODO: not any
+// TODO: should not log here but just prepare output so it will be testable
 export function outputReport(productivityByProject: any, choice: number, from: Date, to: Date, absolute: boolean) {
 	const realtiveness = absolute ? 'Absolute' : 'Relative';
 
