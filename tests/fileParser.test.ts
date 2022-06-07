@@ -80,7 +80,7 @@ First:1
 
 `;
 
-const dataWithInvalidProject = (project: string) => `
+const dataWithInvalidMetadataProject = (project: string) => `
 ---
 Projects:
 - First
@@ -139,14 +139,18 @@ describe('fileParser', () => {
         expect(parser.parse()).toMatchSnapshot();
     });
 
-    test.each([
-        DUPLICATED_METADATA,
-        DUPLICATED_RECORD,
-    ])('parse duplicated data', (data: string) => {
-        readFileSyncMocked.mockReturnValue(data);
+    test('parse duplicated metadata', () => {
+        readFileSyncMocked.mockReturnValue(DUPLICATED_METADATA);
 
-        expect(parser.parse.bind(parser)).toThrowError();
+        expect(parser.parse.bind(parser)).toThrowError("duplicated metadata project");
     });
+
+    test('parse duplicated record', () => {
+        readFileSyncMocked.mockReturnValue(DUPLICATED_RECORD);
+
+        expect(parser.parse.bind(parser)).toThrowError("duplicated project record");
+    });
+
 
     test('parse invalid file', () => {
         readFileSyncMocked.mockReturnValue('dummy');
@@ -154,17 +158,14 @@ describe('fileParser', () => {
         expect(parser.parse()).toMatchSnapshot();
     });
 
-    // FIXME: throw exception
     test.each([
-        '2022/05/22',
         '2022-99-22',
-        '9999-05-22',
         '2022-05-99',
         '2022-02-30',
     ])('parse invalid date %p', (date: string) => {
         readFileSyncMocked.mockReturnValue(dataWithInvalidDate(date));
 
-        expect(parser.parse.bind(parser)).toThrowError();
+        expect(parser.parse.bind(parser)).toThrowError("invalid date");
     });
 
     test.each([
@@ -179,28 +180,27 @@ describe('fileParser', () => {
     ])('parse invalid mark %p', (mark: string) => {
         readFileSyncMocked.mockReturnValue(dataWithInvalidMark(mark));
 
-        expect(parser.parse.bind(parser)).toThrowError();
+        expect(parser.parse.bind(parser)).toThrowError('invalid mark');
     });
 
-    // FIXME exception for invalid project
     test.each([
         'dummy',
         '12345',
         '- 1abcde',
-        '- test/',
-    ])('parse invalid project %p', (project: string) => {
-        readFileSyncMocked.mockReturnValue(dataWithInvalidProject(project));
+        '- test%',
+        '- test&',
+    ])('parse invalid metdata project %p', (project: string) => {
+        readFileSyncMocked.mockReturnValue(dataWithInvalidMetadataProject(project));
 
-        expect(parser.parse.bind(parser)).toThrowError();
+        expect(parser.parse.bind(parser)).toThrowError("invalid metadata project");
     });
 
-    // FIXME exception for invalid project name
     test.each([
         'dummy',
         '1:1',
         '-t:1',
-        't-:1',
-        'test/:1',
+        't%:1',
+        'test^:1',
     ])('parse invalid record %p', (record: string) => {
         readFileSyncMocked.mockReturnValue(dataWithInvalidRecord(record));
 
