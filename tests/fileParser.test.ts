@@ -121,9 +121,10 @@ const FILE_NAME = 'sample.txt';
 
 describe('fileParser', () => {
     const readFileSyncMocked = fs.readFileSync as jest.Mock;
-    const parser = new FileParser(FILE_NAME);
+    let parser: FileParser;
 
     beforeEach(() => {
+        parser = new FileParser(FILE_NAME);
         jest.resetAllMocks();
     });
 

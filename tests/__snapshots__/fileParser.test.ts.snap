@@ -101,3 +101,14 @@ Object {
   "records": Array [],
 }
 `;
+
+exports[`fileParser parse valid data 5`] = `
+Object {
+  "metadata": Object {
+    "projects": Array [
+      "First",
+    ],
+  },
+  "records": Array [],
+}
+`;
