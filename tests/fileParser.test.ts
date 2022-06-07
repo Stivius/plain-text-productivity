@@ -120,90 +120,90 @@ ${record}
 const FILE_NAME = 'sample.txt';
 
 describe('fileParser', () => {
-	const readFileSyncMocked = fs.readFileSync as jest.Mock;
-	const parser = new FileParser(FILE_NAME);
+    const readFileSyncMocked = fs.readFileSync as jest.Mock;
+    const parser = new FileParser(FILE_NAME);
 
-	beforeEach(() => {
-		jest.resetAllMocks();
-	});
+    beforeEach(() => {
+        jest.resetAllMocks();
+    });
 
-	test.each([
-		DATA,
-		DATA_WITHOUT_METADATA,
-		DATA_ONLY_WITH_METADATA,
-		DATA_WITH_UNCLOSED_METADATA,
-		DATA_WITHOUT_NEW_LINES
-	])('parse valid data', (data: string) => {
-		readFileSyncMocked.mockReturnValue(data);
+    test.each([
+        DATA,
+        DATA_WITHOUT_METADATA,
+        DATA_ONLY_WITH_METADATA,
+        DATA_WITH_UNCLOSED_METADATA,
+        DATA_WITHOUT_NEW_LINES
+    ])('parse valid data', (data: string) => {
+        readFileSyncMocked.mockReturnValue(data);
 
-		expect(parser.parse()).toMatchSnapshot();
-	});
+        expect(parser.parse()).toMatchSnapshot();
+    });
 
-	test.each([
-		DUPLICATED_METADATA,
-		DUPLICATED_RECORD,
-	])('parse duplicated data', (data: string) => {
-		readFileSyncMocked.mockReturnValue(data);
+    test.each([
+        DUPLICATED_METADATA,
+        DUPLICATED_RECORD,
+    ])('parse duplicated data', (data: string) => {
+        readFileSyncMocked.mockReturnValue(data);
 
-		expect(parser.parse.bind(parser)).toThrowError();
-	});
+        expect(parser.parse.bind(parser)).toThrowError();
+    });
 
-	test('parse invalid file', () => {
-		readFileSyncMocked.mockReturnValue('dummy');
+    test('parse invalid file', () => {
+        readFileSyncMocked.mockReturnValue('dummy');
 
-		expect(parser.parse()).toMatchSnapshot();
-	});
+        expect(parser.parse()).toMatchSnapshot();
+    });
 
-	// FIXME: throw exception
-	test.each([
-		'2022/05/22',
-		'2022-99-22',
-		'9999-05-22',
-		'2022-05-99',
-		'2022-02-30',
-	])('parse invalid date %p', (date: string) => {
-		readFileSyncMocked.mockReturnValue(dataWithInvalidDate(date));
+    // FIXME: throw exception
+    test.each([
+        '2022/05/22',
+        '2022-99-22',
+        '9999-05-22',
+        '2022-05-99',
+        '2022-02-30',
+    ])('parse invalid date %p', (date: string) => {
+        readFileSyncMocked.mockReturnValue(dataWithInvalidDate(date));
 
-		expect(parser.parse.bind(parser)).toThrowError();
-	});
+        expect(parser.parse.bind(parser)).toThrowError();
+    });
 
-	test.each([
-		'dummy',
-		'-1',
-		'0',
-		'6',
-		Number.NEGATIVE_INFINITY,
-		Number.POSITIVE_INFINITY,
-		Number.MAX_SAFE_INTEGER,
-		Number.MIN_SAFE_INTEGER,
-	])('parse invalid mark %p', (mark: string) => {
-		readFileSyncMocked.mockReturnValue(dataWithInvalidMark(mark));
+    test.each([
+        'dummy',
+        '-1',
+        '0',
+        '6',
+        Number.NEGATIVE_INFINITY,
+        Number.POSITIVE_INFINITY,
+        Number.MAX_SAFE_INTEGER,
+        Number.MIN_SAFE_INTEGER,
+    ])('parse invalid mark %p', (mark: string) => {
+        readFileSyncMocked.mockReturnValue(dataWithInvalidMark(mark));
 
-		expect(parser.parse.bind(parser)).toThrowError();
-	});
+        expect(parser.parse.bind(parser)).toThrowError();
+    });
 
-	// FIXME exception for invalid project
-	test.each([
-		'dummy',
-		'12345',
-		'- 1abcde',
-		'- test/',
-	])('parse invalid project %p', (project: string) => {
-		readFileSyncMocked.mockReturnValue(dataWithInvalidProject(project));
+    // FIXME exception for invalid project
+    test.each([
+        'dummy',
+        '12345',
+        '- 1abcde',
+        '- test/',
+    ])('parse invalid project %p', (project: string) => {
+        readFileSyncMocked.mockReturnValue(dataWithInvalidProject(project));
 
-		expect(parser.parse.bind(parser)).toThrowError();
-	});
+        expect(parser.parse.bind(parser)).toThrowError();
+    });
 
-	// FIXME exception for invalid project name
-	test.each([
-		'dummy',
-		'1:1',
-		'-t:1',
-		't-:1',
-		'test/:1',
-	])('parse invalid record %p', (record: string) => {
-		readFileSyncMocked.mockReturnValue(dataWithInvalidRecord(record));
+    // FIXME exception for invalid project name
+    test.each([
+        'dummy',
+        '1:1',
+        '-t:1',
+        't-:1',
+        'test/:1',
+    ])('parse invalid record %p', (record: string) => {
+        readFileSyncMocked.mockReturnValue(dataWithInvalidRecord(record));
 
-		expect(parser.parse.bind(parser)).toThrowError();
-	});
+        expect(parser.parse.bind(parser)).toThrowError();
+    });
 });

@@ -1,22 +1,22 @@
 export type Mark = 1|2|3|4|5;
 
 export interface EstimatedProject {
-	name: string;
-	mark: Mark;
+    name: string;
+    mark: Mark;
 }
 
 export interface Record {
-	day: Date;
-	projects: EstimatedProject[];	
+    day: Date;
+    projects: EstimatedProject[];	
 }
 
 export interface Metadata {
-	projects: string[];
+    projects: string[];
 }
 
 export interface FileData {
-	metadata: Metadata;
-	records: Record[];
+    metadata: Metadata;
+    records: Record[];
 }
 
 export const FILE_NAME = 'productivity.txt';
