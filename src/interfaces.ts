@@ -5,7 +5,7 @@ export interface EstimatedProject {
     mark: Mark;
 }
 
-export interface Record {
+export interface ProjectRecord {
     day: Date;
     projects: EstimatedProject[];	
 }
@@ -16,7 +16,7 @@ export interface Metadata {
 
 export interface FileData {
     metadata: Metadata;
-    records: Record[];
+    records: ProjectRecord[];
 }
 
 export const FILE_NAME = 'productivity.txt';

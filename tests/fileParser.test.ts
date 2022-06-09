@@ -26,7 +26,6 @@ Test2:-
 
 `;
 
-// FIXME record should be parsed
 const DATA_WITHOUT_METADATA = `
 2022-05-22
 First:1
@@ -47,7 +46,6 @@ const DATA_WITH_UNCLOSED_METADATA = `
 Projects:
 - First`;
 
-// FIXME 2 records should be parsed
 const DATA_WITHOUT_NEW_LINES = `
 ---
 Projects:

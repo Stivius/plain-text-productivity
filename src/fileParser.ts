@@ -2,7 +2,7 @@ import fs from 'fs';
 import moment from 'moment';
 import {
     FileData,
-    Record,
+    ProjectRecord,
     Mark,
     EstimatedProject,
     DATE_REGEX,
@@ -11,75 +11,172 @@ import {
 } from "./interfaces";
 
 enum ParsingState {
-    Init,
-    MetadataStarted,
-    MetadataActiveProjects,
-    ArchivedProjects,
-    Blank,
-    Record,
+    Init = 'init',
+    MetadataStarted = 'metadata_started',
+    MetadataFinished = 'metadata_finished',
+    MetadataActiveProjectsStarted = 'metadata_active_projects_started',
+    MetadataActiveProjects = 'metadata_active_projects',
+    MetadataCompletedProjects = 'metadata_completed_projects',
+    ArchivedProjects = 'archived_projects',
+    Record = 'record'
+}
+
+type StateAction = (line: string) => void;
+type StateTransitionCondition = (line: string) => boolean;
+
+interface Transition {
+    newState: ParsingState;
+    condition: StateTransitionCondition;
+}
+
+class ParsingStateMachine {
+    private state = ParsingState.Init;
+    private stateActions = new Map<ParsingState, StateAction>();
+    private stateTransitions = new Map<ParsingState, Transition[]>();
+
+    addStateAction(state: ParsingState, action: StateAction) {
+        this.stateActions.set(state, action);
+    }
+
+    addStateTransition(state: ParsingState, newState: ParsingState, condition: StateTransitionCondition) {
+        if (!this.stateTransitions.has(state)) {
+            this.stateTransitions.set(state, []);
+        }
+        let transitions = this.stateTransitions.get(state);
+        transitions.push({ 
+            newState: newState,
+            condition: condition
+        });
+    }
+
+    parseLine(line: string) {
+        const transitions = this.stateTransitions.get(this.state);
+        if (transitions !== undefined) {
+            for (const transition of transitions) {
+                if (transition.condition(line)) {
+                    this.state = transition.newState;  
+                    break;
+                }
+            }
+        }
+        this.performActionForState(line);
+    }
+    
+    private performActionForState(line: string) {
+        const action = this.stateActions.get(this.state);
+        if (action !== undefined) {
+            action(line);
+        }
+    }
 }
 
 export class FileParser {
     private projects: string[] = [];
-    private records: Record[] = [];
-    private currentRecord: Record = undefined;
+    private records: ProjectRecord[] = [];
+    private currentRecord: ProjectRecord = undefined;
 
     constructor(private filename: string) { }
 
     parse(): FileData {
         const data = fs.readFileSync(this.filename);
         const lines = data.toString().split('\n');
+        const stateMachine = new ParsingStateMachine();
 
-        const METADATA_SEPARATOR = '---';
+        stateMachine.addStateAction(
+            ParsingState.Record,
+            (line: string) => {
+                if (this.isStartOfNewRecord(line)) {
+                    if (this.currentRecord !== undefined) {
+                        this.records.push(this.currentRecord);
+                    }
+                    this.currentRecord = this.createRecord(line);
+                } else {
+                    this.currentRecord.projects.push(this.parseProject(line));
+                }
+            }
+        );
 
-        let state: ParsingState = ParsingState.Init;
-        let metadataLines = 0;
+        stateMachine.addStateAction(
+            ParsingState.MetadataActiveProjects,
+            (line: string) => {
+                this.projects.push(this.parseMetadataProject(line));
+            }
+        );
+
+        stateMachine.addStateTransition(
+            ParsingState.Init,
+            ParsingState.MetadataStarted,
+            (line: string) => {
+                return this.isMetadataSeparator(line);
+            }
+        );
+
+        stateMachine.addStateTransition(
+            ParsingState.Init,
+            ParsingState.Record,
+            (line: string) => {
+                return this.isStartOfNewRecord(line);
+            }
+        );
+
+        stateMachine.addStateTransition(
+            ParsingState.MetadataStarted,
+            ParsingState.MetadataActiveProjectsStarted,
+            (line: string) => {
+                return this.isStartOfActiveProjects(line);
+            }
+        )
+
+        stateMachine.addStateTransition(
+            ParsingState.MetadataActiveProjectsStarted,
+            ParsingState.MetadataActiveProjects,
+            (line: string) => {
+                return true;
+            }
+        )
+
+        stateMachine.addStateTransition(
+            ParsingState.MetadataActiveProjects,
+            ParsingState.MetadataFinished,
+            (line: string) => {
+                return this.isMetadataSeparator(line);
+            }
+        )
+
+        stateMachine.addStateTransition(
+            ParsingState.MetadataFinished,
+            ParsingState.Record,
+            (line: string) => {
+                return this.isStartOfNewRecord(line);
+            }
+        )
 
         for (const line of lines) {
             const trimmedLine = line.trim();
-            ++metadataLines;
-            switch (state) {
-                case ParsingState.Init:
-                    if (trimmedLine === METADATA_SEPARATOR) {
-                        state = ParsingState.MetadataStarted;
-                    }
-                    break;
-                case ParsingState.MetadataStarted:
-                    if (trimmedLine.indexOf('Projects:') !== -1) {
-                        state = ParsingState.MetadataActiveProjects;
-                    }                     break;
-                case ParsingState.MetadataActiveProjects:
-                    if (trimmedLine === METADATA_SEPARATOR) {
-                        state = ParsingState.Blank;
-                    } else {
-                        this.projects.push(this.parseMetadataProject(trimmedLine));
-                    }
-                    break;
-                case ParsingState.Blank:
-                    if (trimmedLine.match(DATE_REGEX)) {
-                        state = ParsingState.Record;
-                        this.currentRecord = this.createRecord(trimmedLine);
-                    }
-                    break;
-                case ParsingState.Record:
-                    if (trimmedLine.length !== 0) {
-                        this.currentRecord.projects.push(this.parseProject(trimmedLine));
-                    } else {
-                        state = ParsingState.Blank;
-                        if (this.currentRecord !== undefined) {
-                            this.records.push(this.currentRecord);
-                            this.currentRecord = undefined;
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
+            if (trimmedLine.length === 0)
+                continue;
+
+            stateMachine.parseLine(trimmedLine);
+        }
+        if (this.currentRecord !== undefined) {
+            this.records.push(this.currentRecord);
         }
         return { metadata: { projects: this.projects }, records: this.records };
     }
 
-    private createRecord(line: string) {
+    private isMetadataSeparator(line: string) {
+        return line === '---';
+    }
+
+    private isStartOfNewRecord(line: string) {
+        return line.match(DATE_REGEX) !== null;
+    }
+
+    private isStartOfActiveProjects(line: string) {
+        return line.indexOf('Projects:') !== -1;
+    }
+
+    private createRecord(line: string): ProjectRecord {
         if (!moment(line, 'YYYY-MM-DD').isValid()) {
             throw Error('invalid date')
         }
@@ -89,7 +186,7 @@ export class FileParser {
         }
     }
 
-    private parseMetadataProject(line: string) {
+    private parseMetadataProject(line: string): string {
         if (!line.match(METADATA_PROJECT_NAME_REGEX)) {
             throw Error('invalid metadata project');
         }

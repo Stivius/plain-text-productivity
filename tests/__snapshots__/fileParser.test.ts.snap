@@ -74,7 +74,29 @@ Object {
   "metadata": Object {
     "projects": Array [],
   },
-  "records": Array [],
+  "records": Array [
+    Object {
+      "day": 2022-05-22T00:00:00.000Z,
+      "projects": Array [
+        Object {
+          "mark": 1,
+          "name": "First",
+        },
+        Object {
+          "mark": 2,
+          "name": "Second",
+        },
+        Object {
+          "mark": 3,
+          "name": "Third",
+        },
+        Object {
+          "mark": 1,
+          "name": "Test",
+        },
+      ],
+    },
+  ],
 }
 `;
 
@@ -109,6 +131,25 @@ Object {
       "First",
     ],
   },
-  "records": Array [],
+  "records": Array [
+    Object {
+      "day": 2022-05-22T00:00:00.000Z,
+      "projects": Array [
+        Object {
+          "mark": 1,
+          "name": "First",
+        },
+      ],
+    },
+    Object {
+      "day": 2022-05-23T00:00:00.000Z,
+      "projects": Array [
+        Object {
+          "mark": 2,
+          "name": "First",
+        },
+      ],
+    },
+  ],
 }
 `;
