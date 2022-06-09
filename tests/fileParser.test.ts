@@ -143,13 +143,13 @@ describe('fileParser', () => {
     test('parse duplicated metadata', () => {
         readFileSyncMocked.mockReturnValue(DUPLICATED_METADATA);
 
-        expect(parser.parse.bind(parser)).toThrowError("duplicated metadata project");
+        expect(parser.parse.bind(parser)).toThrowError('duplicated metadata project');
     });
 
     test('parse duplicated record', () => {
         readFileSyncMocked.mockReturnValue(DUPLICATED_RECORD);
 
-        expect(parser.parse.bind(parser)).toThrowError("duplicated project record");
+        expect(parser.parse.bind(parser)).toThrowError('duplicated project record');
     });
 
 
@@ -166,7 +166,7 @@ describe('fileParser', () => {
     ])('parse invalid date %p', (date: string) => {
         readFileSyncMocked.mockReturnValue(dataWithInvalidDate(date));
 
-        expect(parser.parse.bind(parser)).toThrowError("invalid date");
+        expect(parser.parse.bind(parser)).toThrowError('invalid date');
     });
 
     test.each([
@@ -193,7 +193,7 @@ describe('fileParser', () => {
     ])('parse invalid metdata project %p', (project: string) => {
         readFileSyncMocked.mockReturnValue(dataWithInvalidMetadataProject(project));
 
-        expect(parser.parse.bind(parser)).toThrowError("invalid metadata project");
+        expect(parser.parse.bind(parser)).toThrowError('invalid metadata project');
     });
 
     test.each([

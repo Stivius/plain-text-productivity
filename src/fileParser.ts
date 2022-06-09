@@ -38,35 +38,42 @@ export class FileParser {
         for (const line of lines) {
             const trimmedLine = line.trim();
             ++metadataLines;
-            // TODO: state machine
-            if (trimmedLine === METADATA_SEPARATOR) {
-                if (state === ParsingState.Init) {
-                    state = ParsingState.MetadataStarted;
-                } else {
-                    state = ParsingState.Blank;
-                }
-            }
-            else if (trimmedLine.indexOf('Projects:') !== -1) {
-                if (state === ParsingState.MetadataStarted) {
-                    state = ParsingState.MetadataActiveProjects;
-                }
-            }
-            else if (state === ParsingState.MetadataActiveProjects) {
-                this.projects.push(this.parseMetadataProject(trimmedLine));
-            }
-            else if (trimmedLine.length === 0 && state !== ParsingState.Init) {
-                state = ParsingState.Blank;
-                if (this.currentRecord !== undefined) {
-                    this.records.push(this.currentRecord);
-                    this.currentRecord = undefined;
-                }
-            }
-            else if (trimmedLine.match(DATE_REGEX) && state === ParsingState.Blank) {
-                state = ParsingState.Record;
-                this.currentRecord = this.createRecord(trimmedLine);
-            }
-            else if (state === ParsingState.Record) {
-                this.currentRecord.projects.push(this.parseProject(trimmedLine));
+            switch (state) {
+                case ParsingState.Init:
+                    if (trimmedLine === METADATA_SEPARATOR) {
+                        state = ParsingState.MetadataStarted;
+                    }
+                    break;
+                case ParsingState.MetadataStarted:
+                    if (trimmedLine.indexOf('Projects:') !== -1) {
+                        state = ParsingState.MetadataActiveProjects;
+                    }                     break;
+                case ParsingState.MetadataActiveProjects:
+                    if (trimmedLine === METADATA_SEPARATOR) {
+                        state = ParsingState.Blank;
+                    } else {
+                        this.projects.push(this.parseMetadataProject(trimmedLine));
+                    }
+                    break;
+                case ParsingState.Blank:
+                    if (trimmedLine.match(DATE_REGEX)) {
+                        state = ParsingState.Record;
+                        this.currentRecord = this.createRecord(trimmedLine);
+                    }
+                    break;
+                case ParsingState.Record:
+                    if (trimmedLine.length !== 0) {
+                        this.currentRecord.projects.push(this.parseProject(trimmedLine));
+                    } else {
+                        state = ParsingState.Blank;
+                        if (this.currentRecord !== undefined) {
+                            this.records.push(this.currentRecord);
+                            this.currentRecord = undefined;
+                        }
+                    }
+                    break;
+                default:
+                    break;
             }
         }
         return { metadata: { projects: this.projects }, records: this.records };
