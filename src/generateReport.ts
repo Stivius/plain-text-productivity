@@ -1,7 +1,7 @@
 import chain, {filter, round, sumBy} from 'lodash'
-import {Record} from './interfaces'
+import {ProjectRecord} from './interfaces'
 
-export function generateReport(records: Record[], from: Date, to: Date, absolute: boolean) {
+export function generateReport(records: ProjectRecord[], from: Date, to: Date, absolute: boolean) {
     const groupedData = chain(records)
     .filter((r) => r.day >= from && r.day <= to)
     .map((r) => r.projects)

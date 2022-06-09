@@ -3,7 +3,8 @@
 exports[`fileParser parse invalid file 1`] = `
 Object {
   "metadata": Object {
-    "projects": Array [],
+    "acrhivedProjects": Array [],
+    "activeProjects": Array [],
   },
   "records": Array [],
 }
@@ -12,7 +13,8 @@ Object {
 exports[`fileParser parse valid data 1`] = `
 Object {
   "metadata": Object {
-    "projects": Array [
+    "acrhivedProjects": Array [],
+    "activeProjects": Array [
       "First",
       "Second",
       "Third",
@@ -72,7 +74,8 @@ Object {
 exports[`fileParser parse valid data 2`] = `
 Object {
   "metadata": Object {
-    "projects": Array [],
+    "acrhivedProjects": Array [],
+    "activeProjects": Array [],
   },
   "records": Array [
     Object {
@@ -103,10 +106,12 @@ Object {
 exports[`fileParser parse valid data 3`] = `
 Object {
   "metadata": Object {
-    "projects": Array [
-      "First",
-      "a1234",
-      "abcd",
+    "acrhivedProjects": Array [
+      "Todo.txt Tool",
+    ],
+    "activeProjects": Array [
+      "Test Learning",
+      "Non-Fiction Reading",
     ],
   },
   "records": Array [],
@@ -116,7 +121,8 @@ Object {
 exports[`fileParser parse valid data 4`] = `
 Object {
   "metadata": Object {
-    "projects": Array [
+    "acrhivedProjects": Array [],
+    "activeProjects": Array [
       "First",
     ],
   },
@@ -127,7 +133,8 @@ Object {
 exports[`fileParser parse valid data 5`] = `
 Object {
   "metadata": Object {
-    "projects": Array [
+    "acrhivedProjects": Array [],
+    "activeProjects": Array [
       "First",
     ],
   },

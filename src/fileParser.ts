@@ -15,9 +15,9 @@ enum ParsingState {
     MetadataStarted = 'metadata_started',
     MetadataFinished = 'metadata_finished',
     MetadataActiveProjectsStarted = 'metadata_active_projects_started',
-    MetadataActiveProjects = 'metadata_active_projects',
-    MetadataCompletedProjects = 'metadata_completed_projects',
-    ArchivedProjects = 'archived_projects',
+    MetadataActiveProject = 'metadata_active_projects',
+    MetadataArchivedProjectsStarted = 'metadata_archived_projects_started',
+    MetadataArchivedProject = 'metadata_archived_projects',
     Record = 'record'
 }
 
@@ -71,7 +71,8 @@ class ParsingStateMachine {
 }
 
 export class FileParser {
-    private projects: string[] = [];
+    private activeProjects: string[] = [];
+    private acrhivedProjects: string[] = [];
     private records: ProjectRecord[] = [];
     private currentRecord: ProjectRecord = undefined;
 
@@ -97,9 +98,16 @@ export class FileParser {
         );
 
         stateMachine.addStateAction(
-            ParsingState.MetadataActiveProjects,
+            ParsingState.MetadataActiveProject,
             (line: string) => {
-                this.projects.push(this.parseMetadataProject(line));
+                this.activeProjects.push(this.parseMetadataProject(line));
+            }
+        );
+
+        stateMachine.addStateAction(
+            ParsingState.MetadataArchivedProject,
+            (line: string) => {
+                this.acrhivedProjects.push(this.parseMetadataProject(line));
             }
         );
 
@@ -128,15 +136,55 @@ export class FileParser {
         )
 
         stateMachine.addStateTransition(
-            ParsingState.MetadataActiveProjectsStarted,
-            ParsingState.MetadataActiveProjects,
+            ParsingState.MetadataStarted,
+            ParsingState.MetadataArchivedProjectsStarted,
             (line: string) => {
+                return this.isStartOfArchivedProjects(line);
+            }
+        )
+
+        stateMachine.addStateTransition(
+            ParsingState.MetadataArchivedProject,
+            ParsingState.MetadataActiveProjectsStarted,
+            (line: string) => {
+                return this.isStartOfActiveProjects(line);
+            }
+        )
+
+        stateMachine.addStateTransition(
+            ParsingState.MetadataActiveProject,
+            ParsingState.MetadataArchivedProjectsStarted,
+            (line: string) => {
+                return this.isStartOfArchivedProjects(line);
+            }
+        )
+
+        stateMachine.addStateTransition(
+            ParsingState.MetadataActiveProjectsStarted,
+            ParsingState.MetadataActiveProject,
+            () => {
                 return true;
             }
         )
 
         stateMachine.addStateTransition(
-            ParsingState.MetadataActiveProjects,
+            ParsingState.MetadataArchivedProjectsStarted,
+            ParsingState.MetadataArchivedProject,
+            () => {
+                return true;
+            }
+        )
+
+        stateMachine.addStateTransition(
+            ParsingState.MetadataArchivedProject,
+            ParsingState.MetadataFinished,
+            (line: string) => {
+                return this.isMetadataSeparator(line);
+            }
+        )
+
+        stateMachine.addStateTransition(
+            ParsingState.MetadataActiveProject,
             ParsingState.MetadataFinished,
             (line: string) => {
                 return this.isMetadataSeparator(line);
@@ -161,7 +209,13 @@ export class FileParser {
         if (this.currentRecord !== undefined) {
             this.records.push(this.currentRecord);
         }
-        return { metadata: { projects: this.projects }, records: this.records };
+        return { 
+            metadata: { 
+                activeProjects: this.activeProjects,
+                acrhivedProjects: this.acrhivedProjects 
+            }, 
+            records: this.records 
+        };
     }
 
     private isMetadataSeparator(line: string) {
@@ -174,6 +228,10 @@ export class FileParser {
 
     private isStartOfActiveProjects(line: string) {
         return line.indexOf('Projects:') !== -1;
+    }
+
+    private isStartOfArchivedProjects(line: string) {
+        return line.indexOf('Archived:') !== -1;
     }
 
     private createRecord(line: string): ProjectRecord {
@@ -191,7 +249,7 @@ export class FileParser {
             throw Error('invalid metadata project');
         }
         const parsedProject = line.replace('-', '').trim();
-        if (this.projects.indexOf(parsedProject) !== -1) {
+        if (this.activeProjects.indexOf(parsedProject) !== -1) {
             throw Error('duplicated metadata project');
         }
         return parsedProject;

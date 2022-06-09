@@ -36,9 +36,10 @@ Test:1`;
 const DATA_ONLY_WITH_METADATA = `
 ---
 Projects:
-- First
-- a1234
--abcd
+- Test Learning
+- Non-Fiction Reading
+Archived:
+- Todo.txt Tool
 ---`;
 
 const DATA_WITH_UNCLOSED_METADATA = `
