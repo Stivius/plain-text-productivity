@@ -1,11 +1,12 @@
 import chain, {filter, round, sumBy} from 'lodash'
-import {ProjectRecord} from './interfaces'
+import {FileData} from './interfaces'
 
-export function generateReport(records: ProjectRecord[], from: Date, to: Date, absolute: boolean) {
-    const groupedData = chain(records)
+export function generateReport(data: FileData, from: Date, to: Date, absolute: boolean) {
+    const groupedData = chain(data.records)
     .filter((r) => r.day >= from && r.day <= to)
     .map((r) => r.projects)
     .flatMap()
+    .filter((p) => data.metadata.activeProjects.indexOf(p.name) !== -1)
     .groupBy((assesed) => assesed.name);
     const averageMarkByProject = groupedData.map((group, groupName) => {
         const groupSum = sumBy(group, (assesed) => assesed.mark);

@@ -81,7 +81,7 @@ async function main() {
                 };
 
                 const { from, to, choice } = await getRange(options);
-                const productivityByProject = generateReport(data.records, from, to, options.absolute);
+                const productivityByProject = generateReport(data, from, to, options.absolute);
                 outputReport(productivityByProject, choice, from, to, options.absolute);
                 break;
             }

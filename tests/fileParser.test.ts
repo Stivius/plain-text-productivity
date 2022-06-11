@@ -9,6 +9,9 @@ Projects:
 - First
 - Second
 - Third
+Archived:
+- Test
+- Test2
 ---
    
 2022-05-22
@@ -26,20 +29,13 @@ Test2:-
 
 `;
 
-const DATA_WITHOUT_METADATA = `
-2022-05-22
-First:1
-Second:2
-Third:3
-Test:1`;
-
 const DATA_ONLY_WITH_METADATA = `
 ---
+Archived:
+- Todo.txt Tool
 Projects:
 - Test Learning
 - Non-Fiction Reading
-Archived:
-- Todo.txt Tool
 ---`;
 
 const DATA_WITH_UNCLOSED_METADATA = `
@@ -51,17 +47,73 @@ const DATA_WITHOUT_NEW_LINES = `
 ---
 Projects:
 - First
+Archived:
+- Second
 ---
 2022-05-22
 First:1
 2022-05-23
 First:2`;
 
+const DATA_WITHOUT_METADATA = `
+2022-05-22
+First:1
+Second:2
+Third:3
+Test:1`;
+
+const UNKNOWN_PROJECT = `
+---
+Projects:
+- First
+---
+2022-05-22
+Second:1
+
+`;
+
+const UNKNOWN_PROJECT_2 = `
+---
+Archived:
+- First
+---
+2022-05-22
+Second:1
+
+`;
+
 const DUPLICATED_METADATA = `
 ---
 Projects:
 - First
 - First
+Archived:
+- Second
+---
+2022-05-22
+First:1
+
+`;
+
+const DUPLICATED_METADATA_2 = `
+---
+Projects:
+- First
+Archived:
+- First
+---
+2022-05-22
+First:1
+
+`;
+
+const DUPLICATED_METADATA_3 = `
+---
+Projects:
+- First
+Archived:
+- Second
+- Second
 ---
 2022-05-22
 First:1
@@ -129,7 +181,6 @@ describe('fileParser', () => {
 
     test.each([
         DATA,
-        DATA_WITHOUT_METADATA,
         DATA_ONLY_WITH_METADATA,
         DATA_WITH_UNCLOSED_METADATA,
         DATA_WITHOUT_NEW_LINES
@@ -139,8 +190,22 @@ describe('fileParser', () => {
         expect(parser.parse()).toMatchSnapshot();
     });
 
-    test('parse duplicated metadata', () => {
-        readFileSyncMocked.mockReturnValue(DUPLICATED_METADATA);
+    test.each([
+        DATA_WITHOUT_METADATA,
+        UNKNOWN_PROJECT,
+        UNKNOWN_PROJECT_2
+    ])('parse unknown project', (data: string) => {
+        readFileSyncMocked.mockReturnValue(data);
+
+        expect(parser.parse.bind(parser)).toThrowError('unknown project');
+    });
+
+    test.each([
+        DUPLICATED_METADATA,
+        DUPLICATED_METADATA_2,
+        DUPLICATED_METADATA_3
+    ])('parse duplicated metadata', (data: string) => {
+        readFileSyncMocked.mockReturnValue(data);
 
         expect(parser.parse.bind(parser)).toThrowError('duplicated metadata project');
     });
@@ -150,7 +215,6 @@ describe('fileParser', () => {
 
         expect(parser.parse.bind(parser)).toThrowError('duplicated project record');
     });
-
 
     test('parse invalid file', () => {
         readFileSyncMocked.mockReturnValue('dummy');

@@ -79,6 +79,8 @@ export class FileParser {
     constructor(private filename: string) { }
 
     parse(): FileData {
+        this.cleanup();
+
         const data = fs.readFileSync(this.filename);
         const lines = data.toString().split('\n');
         const stateMachine = new ParsingStateMachine();
@@ -218,6 +220,13 @@ export class FileParser {
         };
     }
 
+    private cleanup() {
+        this.acrhivedProjects = [];
+        this.acrhivedProjects = [];
+        this.records = [];
+        this.currentRecord = undefined;
+    }
+
     private isMetadataSeparator(line: string) {
         return line === '---';
     }
@@ -249,7 +258,8 @@ export class FileParser {
             throw Error('invalid metadata project');
         }
         const parsedProject = line.replace('-', '').trim();
-        if (this.activeProjects.indexOf(parsedProject) !== -1) {
+        if (this.activeProjects.indexOf(parsedProject) !== -1 || 
+            this.acrhivedProjects.indexOf(parsedProject) !== -1) {
             throw Error('duplicated metadata project');
         }
         return parsedProject;
@@ -259,10 +269,13 @@ export class FileParser {
         const splitted = line.split(':');
         const [ name, mark ] = splitted;
         if (splitted.length !== 2 || this.currentRecord === undefined || !name.match(PROJECT_NAME_REGEX)) {
-            throw new Error('invalid record')
+            throw new Error('invalid record');
         }
         if (this.currentRecord.projects.find((value) => value.name === name) !== undefined) {
-            throw new Error('duplicated project record')
+            throw new Error('duplicated project record');
+        }
+        if (this.activeProjects.indexOf(name) === -1 && this.acrhivedProjects.indexOf(name) === -1) {
+            throw new Error('unknown project');
         }
         return {
             name: splitted[0],

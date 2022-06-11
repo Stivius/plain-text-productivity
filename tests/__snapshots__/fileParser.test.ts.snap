@@ -13,7 +13,10 @@ Object {
 exports[`fileParser parse valid data 1`] = `
 Object {
   "metadata": Object {
-    "acrhivedProjects": Array [],
+    "acrhivedProjects": Array [
+      "Test",
+      "Test2",
+    ],
     "activeProjects": Array [
       "First",
       "Second",
@@ -74,38 +77,6 @@ Object {
 exports[`fileParser parse valid data 2`] = `
 Object {
   "metadata": Object {
-    "acrhivedProjects": Array [],
-    "activeProjects": Array [],
-  },
-  "records": Array [
-    Object {
-      "day": 2022-05-22T00:00:00.000Z,
-      "projects": Array [
-        Object {
-          "mark": 1,
-          "name": "First",
-        },
-        Object {
-          "mark": 2,
-          "name": "Second",
-        },
-        Object {
-          "mark": 3,
-          "name": "Third",
-        },
-        Object {
-          "mark": 1,
-          "name": "Test",
-        },
-      ],
-    },
-  ],
-}
-`;
-
-exports[`fileParser parse valid data 3`] = `
-Object {
-  "metadata": Object {
     "acrhivedProjects": Array [
       "Todo.txt Tool",
     ],
@@ -118,7 +89,7 @@ Object {
 }
 `;
 
-exports[`fileParser parse valid data 4`] = `
+exports[`fileParser parse valid data 3`] = `
 Object {
   "metadata": Object {
     "acrhivedProjects": Array [],
@@ -130,10 +101,12 @@ Object {
 }
 `;
 
-exports[`fileParser parse valid data 5`] = `
+exports[`fileParser parse valid data 4`] = `
 Object {
   "metadata": Object {
-    "acrhivedProjects": Array [],
+    "acrhivedProjects": Array [
+      "Second",
+    ],
     "activeProjects": Array [
       "First",
     ],
