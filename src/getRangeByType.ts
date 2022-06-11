@@ -1,6 +1,6 @@
 import dateFormat from "dateformat";
 
-enum Aggregation {
+enum BeginningOf {
     Day,
     Week,
     Month,
@@ -13,17 +13,17 @@ const dayInThePast = (daysToSubtract: number = 0) => {
     return date;
 };
 
-const beginingOf = (aggregation: Aggregation) => {
+const beginingOf = (aggregation: BeginningOf) => {
     const date = new Date();
     switch (aggregation) {
-        case Aggregation.Day: return date;
-        case Aggregation.Week: {
+        case BeginningOf.Day: return date;
+        case BeginningOf.Week: {
             const day = date.getDay();
             const diff = date.getDate() - day + (day == 0 ? -6 : 1);
             return new Date(date.setDate(diff));
         }
-        case Aggregation.Month: return new Date(date.getFullYear(), date.getMonth(), 1);
-        case Aggregation.Year: return new Date(date.getFullYear(), 0, 1);
+        case BeginningOf.Month: return new Date(date.getFullYear(), date.getMonth(), 1);
+        case BeginningOf.Year: return new Date(date.getFullYear(), 0, 1);
     }
 };
 
@@ -34,10 +34,10 @@ export function getRangeByType(choice: number) {
     }
 
     const choiceMappings = {
-        1: beginingOf(Aggregation.Day),
-        2: beginingOf(Aggregation.Week),
-        3: beginingOf(Aggregation.Month),
-        4: beginingOf(Aggregation.Year),
+        1: beginingOf(BeginningOf.Day),
+        2: beginingOf(BeginningOf.Week),
+        3: beginingOf(BeginningOf.Month),
+        4: beginingOf(BeginningOf.Year),
         5: dayInThePast(-7),
         6: dayInThePast(-14),
         7: dayInThePast(-30),

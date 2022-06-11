@@ -3,7 +3,7 @@ import columnify from "columnify";
 import dateFormat from "dateformat";
 
 const colorizeProductivity = (value: number) => {
-    const bar = `■■■■■■■ ${isNaN(value) ? '-' : `${value * 100}%`}`;
+    const bar = `■■■■■■■ ${isNaN(value) ? '-' : `${(value * 100).toFixed(2)}%`}`;
     if (isNaN(value)) return chalk.white(bar);
     if (value >= 0 && value < 0.2) return chalk.rgb(150, 0, 0).bold(bar); 
     else if (value >= 0.2 && value < 0.4) return chalk.rgb(255, 125, 125).bold(bar); 
@@ -28,8 +28,7 @@ const ChoiceToString = {
 
 
 // TODO: not any
-// TODO: should not log here but just prepare output so it will be testable
-export function outputReport(productivityByProject: any, choice: number, from: Date, to: Date, absolute: boolean) {
+export function formatReport(productivityByProject: any, choice: number, from: Date, to: Date, absolute: boolean): string {
     const realtiveness = absolute ? 'Absolute' : 'Relative';
 
     console.log(`${ChoiceToString[choice]} ${realtiveness} Report for range ${chalk.blue(dateFormat(from, "yyyy-mm-dd"))} - ${chalk.blue(dateFormat(to, "yyyy-mm-dd"))}`);
@@ -37,5 +36,5 @@ export function outputReport(productivityByProject: any, choice: number, from: D
         name: chalk.yellow(project.name), 
         productivity: colorizeProductivity(project.productivity),
     }));
-    console.log(columnify(outputData.value()));
+    return columnify(outputData.value());
 }

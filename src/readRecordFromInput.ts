@@ -1,21 +1,25 @@
 import prompt from 'prompt';
 import {DATE_REGEX, MARK_REGEX} from './interfaces';
 
-export async function readRecordFromConsole(projects: string[], enterDate = false) {
+export async function readDateFromConsole(): Promise<Date> {
     prompt.start();
     const schema = {
         properties: {
-        }
-    }
-
-    // TODO: move to separate method
-    if (enterDate) {
-        Object.assign(schema.properties, { 
             Date: { 
                 pattern: DATE_REGEX,
                 required: true
             } 
-        })
+        }
+    }
+    const input = await prompt.get(schema);
+    return new Date(input.Date as string);
+}
+
+export async function readRecordFromConsole(projects: string[]) {
+    prompt.start();
+    const schema = {
+        properties: {
+        }
     }
 
     projects.forEach((p) => {

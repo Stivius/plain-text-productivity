@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "tool": "ts-node index.ts",
+    "tool": "ts-node src/index.ts",
     "test": "jest",
     "build": "tsc -p ."
   },

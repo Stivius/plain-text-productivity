@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`formatInput formatInputForConsole 1`] = `
+"[34m2022-01-01[39m
+PROJECT MARK  
+[33mKey1[39m    [37mValue1[39m
+[33mKey2[39m    [37mValue2[39m
+[33mKey3[39m    [37mValue3[39m"
+`;
+
+exports[`formatInput formatInputForFile 1`] = `
+"2022-01-01
+Key1:Value1
+Key2:Value2
+Key3:Value3
+
+"
+`;

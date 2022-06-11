@@ -7,7 +7,8 @@ import {
     EstimatedProject,
     DATE_REGEX,
     PROJECT_NAME_REGEX,
-    METADATA_PROJECT_NAME_REGEX
+    METADATA_PROJECT_NAME_REGEX,
+    MARK_REGEX
 } from "./interfaces";
 
 enum ParsingState {
@@ -284,15 +285,12 @@ export class FileParser {
     }
 
     private parseMark(value: string): Mark {
-        // TODO: mark regex validate
         const trimmedValue = value.trim();
-        if (trimmedValue === '-') {
-            return undefined;
-        }
-        const mark = parseInt(value);
-        if (Number.isNaN(mark) || mark < 1 || mark > 5) {
+        if (trimmedValue.match(MARK_REGEX) === null) {
             throw new Error('invalid mark')
         }
-        return mark as Mark;
+        return trimmedValue === '-' ? 
+            undefined : 
+            parseInt(trimmedValue) as Mark;
     }
 }

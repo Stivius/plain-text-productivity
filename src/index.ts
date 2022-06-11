@@ -1,15 +1,14 @@
 import commandLineArgs from 'command-line-args';
 import fs from 'fs';
-import dateFormat from 'dateformat'
-import {readRecordFromConsole} from './readRecordFromInput';
+import {readDateFromConsole, readRecordFromConsole} from './readRecordFromInput';
 import chalk from 'chalk';
-import {formatDataForFile, outputDataToConsole} from './formatOutput';
-import {EstimatedProject, FileData, FILE_NAME, ProjectRecord} from './interfaces';
+import {formatInputForFile, formatInputForConsole} from './formatInput';
+import {FileData, FILE_NAME} from './interfaces';
 import {readRangeChoiceFromConsole} from './readRangeChoiceFromInput';
 import {getRangeByType} from './getRangeByType';
 import {FileParser} from './fileParser';
 import {generateReport} from './generateReport';
-import {outputReport} from './outputReport';
+import {formatReport} from './formatReport';
 
 const commandsDefinitions = [
     { name: 'command', defaultOption: true },
@@ -17,42 +16,42 @@ const commandsDefinitions = [
 
 const commands = commandLineArgs(commandsDefinitions, { stopAtFirstUnknown: true });
 
+async function addRecord(date: Date, data: FileData) {
+    const enteredData = await readRecordFromConsole(data.metadata.activeProjects);
+    fs.appendFileSync(FILE_NAME, formatInputForFile(date, enteredData));
+    console.log(formatInputForConsole(date, enteredData));
+}
+
 async function main() {
     try {
         const parser = new FileParser(FILE_NAME);
         const data: FileData = parser.parse();
 
         switch (commands.command) {
-            // TODO: refactor output to console/file
-            case 'add': {
-                const enteredData = await readRecordFromConsole(data.metadata.activeProjects);
-                const date = dateFormat(new Date(), "yyyy-mm-dd");
-                console.log(chalk.blue(date));
-                fs.appendFileSync(FILE_NAME, date.concat('\n', formatDataForFile(enteredData), '\n'));
-                outputDataToConsole(enteredData);
+            case 'add':
+                await addRecord(new Date(), data);
                 break;
-            }
 
-            case 'addp': {
-                const enteredData = await readRecordFromConsole(data.metadata.activeProjects, true);
-                fs.appendFileSync(FILE_NAME, formatDataForFile(enteredData).concat('\n'));
-                outputDataToConsole(enteredData);
+            case 'addp':
+                const enteredDate = await readDateFromConsole();
+                await addRecord(enteredDate, data);
                 break;
-            }
 
             case 'lsp':
-                const projects = data.records.map((r: ProjectRecord) => r.projects.map((p: EstimatedProject) => p.name));
-            const uniqueProjects = Array.from(new Set(projects.flat()));
-            const achivedProjects = uniqueProjects.filter((p) => !data.metadata.activeProjects.includes(p));
-            console.log('All projects:');
-            console.log(chalk.yellow(data.metadata.activeProjects.join('\n')));
-            console.log(chalk.gray(achivedProjects.join('\n')));
-            break;
+                console.log('All projects:');
+                console.log(chalk.yellow(data.metadata.activeProjects.join('\n')));
+                console.log(chalk.gray(data.metadata.acrhivedProjects.join('\n')));
+                break;
 
             case 'lspa':
                 console.log('Active projects:');
-            console.log(chalk.yellow(data.metadata.activeProjects.join('\n')));
-            break;
+                console.log(chalk.yellow(data.metadata.activeProjects.join('\n')));
+                break;
+
+            case 'lspar':
+                console.log('Archived projects:');
+                console.log(chalk.yellow(data.metadata.acrhivedProjects.join('\n')));
+                break;
 
             case 'report': {
                 const optionDefinitions = [
@@ -82,12 +81,12 @@ async function main() {
 
                 const { from, to, choice } = await getRange(options);
                 const productivityByProject = generateReport(data, from, to, options.absolute);
-                outputReport(productivityByProject, choice, from, to, options.absolute);
+                console.log(formatReport(productivityByProject, choice, from, to, options.absolute));
                 break;
             }
             default:
                 console.error('Unknown command');
-            break;
+                break;
         }
     } catch (error) {
         console.error(error);
