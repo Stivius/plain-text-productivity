@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-	  "outDir": "./build",
+	  "outDir": "./dist",
 	  "esModuleInterop": true,
 	  "module": "commonjs",
 	  "target": "ES2020"

@@ -22,7 +22,7 @@ async function addRecord(date: Date, data: FileData) {
     console.log(formatInputForConsole(date, enteredData));
 }
 
-async function main() {
+export default async function () {
     try {
         const parser = new FileParser(FILE_NAME);
         const data: FileData = parser.parse();
@@ -93,4 +93,3 @@ async function main() {
     }
 }
 
-main().catch((err) => console.log(err, 'Error while running'))
