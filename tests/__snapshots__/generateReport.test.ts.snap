@@ -1,0 +1,97 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`generateReport absolute report 1`] = `
+Object {
+  "items": Array [
+    Object {
+      "name": "first",
+      "productivity": 0.5,
+    },
+    Object {
+      "name": "second",
+      "productivity": 0.6667,
+    },
+  ],
+  "options": Object {
+    "absolute": true,
+    "choice": 0,
+    "from": 2022-07-01T00:00:00.000Z,
+    "to": 2022-07-04T00:00:00.000Z,
+  },
+}
+`;
+
+exports[`generateReport absolute report for subset days 1`] = `
+Object {
+  "items": Array [
+    Object {
+      "name": "first",
+      "productivity": 0.375,
+    },
+    Object {
+      "name": "second",
+      "productivity": 0.5,
+    },
+  ],
+  "options": Object {
+    "absolute": true,
+    "choice": 0,
+    "from": 2022-07-02T00:00:00.000Z,
+    "to": 2022-07-03T00:00:00.000Z,
+  },
+}
+`;
+
+exports[`generateReport empty day report 1`] = `
+Object {
+  "items": Array [],
+  "options": Object {
+    "absolute": false,
+    "choice": 0,
+    "from": 2022-07-01T00:00:00.000Z,
+    "to": 2022-07-04T00:00:00.000Z,
+  },
+}
+`;
+
+exports[`generateReport relative report 1`] = `
+Object {
+  "items": Array [
+    Object {
+      "name": "first",
+      "productivity": 0.75,
+    },
+    Object {
+      "name": "second",
+      "productivity": 1,
+    },
+  ],
+  "options": Object {
+    "absolute": false,
+    "choice": 0,
+    "from": 2022-07-01T00:00:00.000Z,
+    "to": 2022-07-04T00:00:00.000Z,
+  },
+}
+`;
+
+exports[`generateReport relative report 2`] = `
+Object {
+  "items": Array [
+    Object {
+      "name": "first",
+      "productivity": 0.75,
+    },
+    Object {
+      "name": "second",
+      "productivity": 1,
+    },
+  ],
+  "options": Object {
+    "absolute": false,
+    "choice": 0,
+    "from": 2022-07-02T00:00:00.000Z,
+    "to": 2022-07-03T00:00:00.000Z,
+  },
+}
+`;

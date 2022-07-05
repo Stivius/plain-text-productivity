@@ -80,8 +80,7 @@ export default async function () {
                 };
 
                 const { from, to, choice } = await getRange(options);
-                const productivityByProject = generateReport(data, from, to, options.absolute);
-                console.log(formatReport(productivityByProject, choice, from, to, options.absolute));
+                console.log(formatReport(generateReport(data, { from, to, absolute: options.absolute, choice })));
                 break;
             }
             default:

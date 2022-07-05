@@ -1,6 +1,7 @@
 import chalk from "chalk";
 import columnify from "columnify";
 import dateFormat from "dateformat";
+import {ProductivityReport} from "./interfaces";
 
 const colorizeProductivity = (value: number) => {
     const bar = `■■■■■■■ ${isNaN(value) ? '-' : `${(value * 100).toFixed(2)}%`}`;
@@ -27,14 +28,14 @@ const ChoiceToString = {
 };
 
 
-// TODO: not any
-export function formatReport(productivityByProject: any, choice: number, from: Date, to: Date, absolute: boolean): string {
+export function formatReport(report: ProductivityReport): string {
+    const { from, to, absolute, choice } = report.options;
     const realtiveness = absolute ? 'Absolute' : 'Relative';
 
-    console.log(`${ChoiceToString[choice]} ${realtiveness} Report for range ${chalk.blue(dateFormat(from, "yyyy-mm-dd"))} - ${chalk.blue(dateFormat(to, "yyyy-mm-dd"))}`);
-    const outputData = productivityByProject.map((project) => ({
+    const header = `${ChoiceToString[choice]} ${realtiveness} Report for range ${chalk.blue(dateFormat(from, "yyyy-mm-dd"))} - ${chalk.blue(dateFormat(to, "yyyy-mm-dd"))}\n`;
+    const outputData = report.items.map((project) => ({
         name: chalk.yellow(project.name), 
         productivity: colorizeProductivity(project.productivity),
     }));
-    return columnify(outputData.value());
+    return header.concat(columnify(outputData));
 }

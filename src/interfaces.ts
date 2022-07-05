@@ -20,6 +20,23 @@ export interface FileData {
     records: ProjectRecord[];
 }
 
+export interface ProductivityReportOptions {
+    from: Date;
+    to: Date;
+    absolute: boolean;
+    choice: number;
+}
+
+export interface ProductivityReportItem {
+    name: string;
+    productivity: number;
+}
+
+export interface ProductivityReport {
+    items: ProductivityReportItem[];
+    options: ProductivityReportOptions;
+}
+
 export const FILE_NAME = 'productivity.txt';
 export const DATE_REGEX = /\d{4}-\d{2}-\d{2}/;
 export const MARK_REGEX = /^[1-5]$|^-$/;
