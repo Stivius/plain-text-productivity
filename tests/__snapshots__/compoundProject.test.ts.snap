@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CompoundProject 1-level name 1`] = `
+CompoundProject {
+  "name": "First",
+}
+`;
+
+exports[`CompoundProject 2-level name 1`] = `
+CompoundProject {
+  "name": "Second",
+  "parent": CompoundProject {
+    "name": "First",
+  },
+}
+`;
+
+exports[`CompoundProject 3-level name 1`] = `
+CompoundProject {
+  "name": "Third",
+  "parent": CompoundProject {
+    "name": "Second",
+    "parent": CompoundProject {
+      "name": "First",
+    },
+  },
+}
+`;

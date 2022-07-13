@@ -1,7 +1,7 @@
 export type Mark = 1|2|3|4|5;
 
 export interface EstimatedProject {
-    name: string;
+    name: string; // CompoundProject
     mark: Mark;
 }
 
@@ -11,8 +11,8 @@ export interface ProjectRecord {
 }
 
 export interface Metadata {
-    activeProjects: string[];
-    acrhivedProjects: string[];
+    activeProjects: string[]; // CompoundProject
+    acrhivedProjects: string[]; // CompoundProject
 }
 
 export interface FileData {
