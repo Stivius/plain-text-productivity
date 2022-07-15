@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CompoundName 1-level name 1`] = `
+CompoundName {
+  "name": "First",
+}
+`;
+
+exports[`CompoundName 2-level name 1`] = `
+CompoundName {
+  "name": "Second",
+  "parent": CompoundName {
+    "name": "First",
+  },
+}
+`;
+
+exports[`CompoundName 3-level name 1`] = `
+CompoundName {
+  "name": "Third",
+  "parent": CompoundName {
+    "name": "Second",
+    "parent": CompoundName {
+      "name": "First",
+    },
+  },
+}
+`;

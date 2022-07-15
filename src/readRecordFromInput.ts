@@ -1,4 +1,5 @@
 import prompt from 'prompt';
+import { CompoundName } from './compoundName';
 import {DATE_REGEX, MARK_REGEX} from './interfaces';
 
 export async function readDateFromConsole(): Promise<Date> {
@@ -15,7 +16,7 @@ export async function readDateFromConsole(): Promise<Date> {
     return new Date(input.Date as string);
 }
 
-export async function readRecordFromConsole(projects: string[]) {
+export async function readRecordFromConsole(projects: CompoundName[]) {
     prompt.start();
     const schema = {
         properties: {
@@ -24,7 +25,7 @@ export async function readRecordFromConsole(projects: string[]) {
 
     projects.forEach((p) => {
         Object.assign(schema.properties, { 
-            [p]: { 
+            [p.toString()]: { 
                 pattern: MARK_REGEX,
                 required: true
             } 

@@ -1,4 +1,5 @@
 import chain, {filter, round, sumBy} from 'lodash'
+import { searchForCompoundProject } from './compoundName';
 import {FileData, ProductivityReport, ProductivityReportOptions} from './interfaces'
 
 export function generateReport(data: FileData, options: ProductivityReportOptions): ProductivityReport {
@@ -6,7 +7,7 @@ export function generateReport(data: FileData, options: ProductivityReportOption
     .filter((r) => r.day >= options.from && r.day <= options.to)
     .map((r) => r.projects)
     .flatMap()
-    .filter((p) => data.metadata.activeProjects.indexOf(p.name) !== -1)
+    .filter((p) => data.metadata.activeProjects.find(searchForCompoundProject(p.name)) !== undefined)
     .groupBy((assesed) => assesed.name);
     const averageMarkByProject = groupedData.map((group, groupName) => {
         const groupSum = sumBy(group, (assesed) => assesed.mark);

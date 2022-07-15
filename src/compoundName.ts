@@ -3,8 +3,8 @@ const SEPARATOR = '/'
 // if has children than can't be used as record
 // EstimatedProject contain only leafs
 
-export class CompoundProject {
-    parent: CompoundProject;
+export class CompoundName {
+    parent: CompoundName;
     name: string;
 
     constructor(value: string) {
@@ -15,7 +15,7 @@ export class CompoundProject {
                 throw Error('subpart cannot be empty');
             }
             if (splitted.length > 0) {
-                this.parent = new CompoundProject(splitted.join(SEPARATOR));
+                this.parent = new CompoundName(splitted.join(SEPARATOR));
             }
             this.name = name;
         } else {
@@ -30,7 +30,11 @@ export class CompoundProject {
         return this.name;
     }
 
-    isEqual(other: CompoundProject): boolean {
+    isEqual(other: CompoundName): boolean {
         return this.toString() === other.toString();
     }
 }
+
+export const searchForCompoundProject = (searchedValue: CompoundName) => {
+  return (value: CompoundName) => value.isEqual(searchedValue);
+};

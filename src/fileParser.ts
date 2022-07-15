@@ -1,5 +1,6 @@
 import fs from 'fs';
 import moment from 'moment';
+import { CompoundName, searchForCompoundProject } from './compoundName';
 import {
     FileData,
     ProjectRecord,
@@ -72,8 +73,8 @@ class ParsingStateMachine {
 }
 
 export class FileParser {
-    private activeProjects: string[] = [];
-    private acrhivedProjects: string[] = [];
+    private activeProjects: CompoundName[] = [];
+    private archivedProjects: CompoundName[] = [];
     private records: ProjectRecord[] = [];
     private currentRecord: ProjectRecord = undefined;
 
@@ -110,7 +111,7 @@ export class FileParser {
         stateMachine.addStateAction(
             ParsingState.MetadataArchivedProject,
             (line: string) => {
-                this.acrhivedProjects.push(this.parseMetadataProject(line));
+                this.archivedProjects.push(this.parseMetadataProject(line));
             }
         );
 
@@ -215,15 +216,15 @@ export class FileParser {
         return { 
             metadata: { 
                 activeProjects: this.activeProjects,
-                acrhivedProjects: this.acrhivedProjects 
+                acrhivedProjects: this.archivedProjects 
             }, 
             records: this.records 
         };
     }
 
     private cleanup() {
-        this.acrhivedProjects = [];
-        this.acrhivedProjects = [];
+        this.archivedProjects = [];
+        this.activeProjects = [];
         this.records = [];
         this.currentRecord = undefined;
     }
@@ -254,13 +255,13 @@ export class FileParser {
         }
     }
 
-    private parseMetadataProject(line: string): string {
+    private parseMetadataProject(line: string): CompoundName {
         if (!line.match(METADATA_PROJECT_NAME_REGEX)) {
             throw Error('invalid metadata project');
         }
-        const parsedProject = line.replace('-', '').trim();
-        if (this.activeProjects.indexOf(parsedProject) !== -1 || 
-            this.acrhivedProjects.indexOf(parsedProject) !== -1) {
+        const parsedProject = new CompoundName(line.replace('-', '').trim());
+        if (this.activeProjects.find(searchForCompoundProject(parsedProject)) || 
+            this.archivedProjects.find(searchForCompoundProject(parsedProject)) ) {
             throw Error('duplicated metadata project');
         }
         return parsedProject;
@@ -272,14 +273,18 @@ export class FileParser {
         if (splitted.length !== 2 || this.currentRecord === undefined || !name.match(PROJECT_NAME_REGEX)) {
             throw new Error('invalid record');
         }
-        if (this.currentRecord.projects.find((value) => value.name === name) !== undefined) {
+        const compoundName = new CompoundName(name);
+        if (this.currentRecord.projects
+            .map((value) => value.name)
+            .find(searchForCompoundProject(compoundName)) !== undefined) {
             throw new Error('duplicated project record');
         }
-        if (this.activeProjects.indexOf(name) === -1 && this.acrhivedProjects.indexOf(name) === -1) {
+        if (!this.activeProjects.find(searchForCompoundProject(compoundName)) && 
+            !this.archivedProjects.find(searchForCompoundProject(compoundName)) ) {
             throw new Error('unknown project');
         }
         return {
-            name: splitted[0],
+            name: compoundName,
             mark: this.parseMark(mark),
         };
     }

@@ -14,13 +14,32 @@ exports[`fileParser parse valid data 1`] = `
 Object {
   "metadata": Object {
     "acrhivedProjects": Array [
-      "Test",
-      "Test2",
+      CompoundName {
+        "name": "Another",
+        "parent": CompoundName {
+          "name": "Other",
+          "parent": CompoundName {
+            "name": "Test",
+          },
+        },
+      },
+      CompoundName {
+        "name": "Test2",
+      },
     ],
     "activeProjects": Array [
-      "First",
-      "Second",
-      "Third",
+      CompoundName {
+        "name": "First",
+      },
+      CompoundName {
+        "name": "Something",
+        "parent": CompoundName {
+          "name": "Second",
+        },
+      },
+      CompoundName {
+        "name": "Third",
+      },
     ],
   },
   "records": Array [
@@ -29,19 +48,36 @@ Object {
       "projects": Array [
         Object {
           "mark": 1,
-          "name": "First",
+          "name": CompoundName {
+            "name": "First",
+          },
         },
         Object {
           "mark": 2,
-          "name": "Second",
+          "name": CompoundName {
+            "name": "Something",
+            "parent": CompoundName {
+              "name": "Second",
+            },
+          },
         },
         Object {
           "mark": 3,
-          "name": "Third",
+          "name": CompoundName {
+            "name": "Third",
+          },
         },
         Object {
           "mark": 1,
-          "name": "Test",
+          "name": CompoundName {
+            "name": "Another",
+            "parent": CompoundName {
+              "name": "Other",
+              "parent": CompoundName {
+                "name": "Test",
+              },
+            },
+          },
         },
       ],
     },
@@ -50,23 +86,42 @@ Object {
       "projects": Array [
         Object {
           "mark": 4,
-          "name": "First",
+          "name": CompoundName {
+            "name": "First",
+          },
         },
         Object {
           "mark": 5,
-          "name": "Second",
+          "name": CompoundName {
+            "name": "Something",
+            "parent": CompoundName {
+              "name": "Second",
+            },
+          },
         },
         Object {
           "mark": 2,
-          "name": "Third",
+          "name": CompoundName {
+            "name": "Third",
+          },
         },
         Object {
           "mark": undefined,
-          "name": "Test",
+          "name": CompoundName {
+            "name": "Another",
+            "parent": CompoundName {
+              "name": "Other",
+              "parent": CompoundName {
+                "name": "Test",
+              },
+            },
+          },
         },
         Object {
           "mark": undefined,
-          "name": "Test2",
+          "name": CompoundName {
+            "name": "Test2",
+          },
         },
       ],
     },
@@ -78,11 +133,17 @@ exports[`fileParser parse valid data 2`] = `
 Object {
   "metadata": Object {
     "acrhivedProjects": Array [
-      "Todo.txt Tool",
+      CompoundName {
+        "name": "Todo.txt Tool",
+      },
     ],
     "activeProjects": Array [
-      "Test Learning",
-      "Non-Fiction Reading",
+      CompoundName {
+        "name": "Test Learning",
+      },
+      CompoundName {
+        "name": "Non-Fiction Reading",
+      },
     ],
   },
   "records": Array [],
@@ -94,7 +155,9 @@ Object {
   "metadata": Object {
     "acrhivedProjects": Array [],
     "activeProjects": Array [
-      "First",
+      CompoundName {
+        "name": "First",
+      },
     ],
   },
   "records": Array [],
@@ -105,10 +168,14 @@ exports[`fileParser parse valid data 4`] = `
 Object {
   "metadata": Object {
     "acrhivedProjects": Array [
-      "Second",
+      CompoundName {
+        "name": "Second",
+      },
     ],
     "activeProjects": Array [
-      "First",
+      CompoundName {
+        "name": "First",
+      },
     ],
   },
   "records": Array [
@@ -117,7 +184,9 @@ Object {
       "projects": Array [
         Object {
           "mark": 1,
-          "name": "First",
+          "name": CompoundName {
+            "name": "First",
+          },
         },
       ],
     },
@@ -126,7 +195,9 @@ Object {
       "projects": Array [
         Object {
           "mark": 2,
-          "name": "First",
+          "name": CompoundName {
+            "name": "First",
+          },
         },
       ],
     },

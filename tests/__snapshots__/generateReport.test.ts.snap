@@ -8,7 +8,7 @@ Object {
       "productivity": 0.5,
     },
     Object {
-      "name": "second",
+      "name": "second/something",
       "productivity": 0.6667,
     },
   ],
@@ -29,7 +29,7 @@ Object {
       "productivity": 0.375,
     },
     Object {
-      "name": "second",
+      "name": "second/something",
       "productivity": 0.5,
     },
   ],
@@ -62,7 +62,7 @@ Object {
       "productivity": 0.75,
     },
     Object {
-      "name": "second",
+      "name": "second/something",
       "productivity": 1,
     },
   ],
@@ -83,7 +83,7 @@ Object {
       "productivity": 0.75,
     },
     Object {
-      "name": "second",
+      "name": "second/something",
       "productivity": 1,
     },
   ],

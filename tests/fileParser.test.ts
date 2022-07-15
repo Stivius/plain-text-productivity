@@ -1,4 +1,4 @@
-import {FileParser} from '../src/fileParser'
+import { FileParser } from '../src/fileParser'
 import fs from 'fs'
 
 jest.mock('fs')
@@ -7,24 +7,24 @@ const DATA = `
 ---
 Projects:
 - First
-- Second
+- Second/Something
 - Third
 Archived:
-- Test
+- Test/Other/Another
 - Test2
 ---
    
 2022-05-22
 First:1
-Second:2
+Second/Something:2
 Third:3
-Test:1 
+Test/Other/Another:1 
 
 2022-05-23
 First:4
-Second:5
+Second/Something:5
 Third:2
-Test:- 
+Test/Other/Another:- 
 Test2:-
 
 `;

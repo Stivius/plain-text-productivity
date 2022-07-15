@@ -1,16 +1,15 @@
-import { CompoundProject } from '../src/compoundProject'
+import { CompoundName } from '../src/compoundName'
 
-
-describe('CompoundProject', () => {
+describe('CompoundName', () => {
     test('1-level name', () => {
-        const name = new CompoundProject('First');
+        const name = new CompoundName('First');
         expect(name).toMatchSnapshot();
         expect(name.toString()).toEqual('First');
         expect(name.parent).toBeUndefined();
     });
 
     test('2-level name', () => {
-        const name = new CompoundProject('First/Second');
+        const name = new CompoundName('First/Second');
         expect(name).toMatchSnapshot();
         expect(name.toString()).toEqual('First/Second');
         expect(name.parent.toString()).toEqual('First');
@@ -18,12 +17,12 @@ describe('CompoundProject', () => {
     });
 
     test('2-level name - empty part', () => {
-        const construct = () => new CompoundProject('First/');
+        const construct = () => new CompoundName('First/');
         expect(construct).toThrowError();
     });
 
     test('3-level name', () => {
-        const name = new CompoundProject('First/Second/Third');
+        const name = new CompoundName('First/Second/Third');
         expect(name).toMatchSnapshot();
         expect(name.toString()).toEqual('First/Second/Third');
         expect(name.parent.toString()).toEqual('First/Second');
@@ -31,12 +30,12 @@ describe('CompoundProject', () => {
     });
 
     test('3-level name - empty part', () => {
-        const construct = () => new CompoundProject('First//Third');
+        const construct = () => new CompoundName('First//Third');
         expect(construct).toThrowError();
     });
 
     test('comparison', () => {
-        const prj = (value: string) => new CompoundProject(value);
+        const prj = (value: string) => new CompoundName(value);
 
         expect(prj('First').isEqual(prj('First'))).toBeTruthy();
         expect(prj('First/Second').isEqual(prj('First/Second'))).toBeTruthy();

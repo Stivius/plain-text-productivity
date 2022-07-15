@@ -1,18 +1,20 @@
+import { CompoundName } from "./compoundName";
+
 export type Mark = 1|2|3|4|5;
 
 export interface EstimatedProject {
-    name: string; // CompoundProject
+    name: CompoundName;
     mark: Mark;
 }
 
 export interface ProjectRecord {
     day: Date;
-    projects: EstimatedProject[];	
+    projects: EstimatedProject[];
 }
 
 export interface Metadata {
-    activeProjects: string[]; // CompoundProject
-    acrhivedProjects: string[]; // CompoundProject
+    activeProjects: CompoundName[];
+    acrhivedProjects: CompoundName[];
 }
 
 export interface FileData {

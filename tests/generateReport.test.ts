@@ -1,37 +1,42 @@
+import { CompoundName, searchForCompoundProject } from '../src/compoundName';
 import {generateReport} from '../src/generateReport'
 import {FileData, ProductivityReportOptions} from '../src/interfaces'
 
+const firstProject = new CompoundName('first');
+const secondProject = new CompoundName('second/something');
+const thirdProject = new CompoundName('third');
+
 export const DATA_SAMPLE: FileData = {
     metadata: {
-        activeProjects: [ 'first', 'second' ],
-        acrhivedProjects: [ 'third' ]
+        activeProjects: [ firstProject, secondProject ],
+        acrhivedProjects: [ thirdProject ]
     },
     records: [
         {
             day: new Date('2022-07-01'),
             projects: [
-                { name: 'first', mark: 4 },
+                { name: firstProject, mark: 4 },
             ]  
         },
         {
             day: new Date('2022-07-02'),
             projects: [
-                { name: 'first', mark: 2 },
-                { name: 'second', mark: 5 }
+                { name: firstProject, mark: 2 },
+                { name: secondProject, mark: 5 }
             ]  
         },
         {
             day: new Date('2022-07-03'),
             projects: [
-                { name: 'first', mark: 3 },
-                { name: 'second', mark: 1 },
-                { name: 'third', mark: 5 }
+                { name: firstProject, mark: 3 },
+                { name: secondProject, mark: 1 },
+                { name: thirdProject, mark: 5 }
             ]  
         },
         {
             day: new Date('2022-07-04'),
             projects: [
-                { name: 'second', mark: 5 }
+                { name: secondProject, mark: 5 }
             ]  
         }
     ]
