@@ -1,5 +1,5 @@
 #! /usr/bin/env node
 
-import main from './index'
+import main from "./index";
 
-main().catch((err) => console.log(err, 'Error while running'))
+main().catch((err) => console.log(err, "Error while running"));

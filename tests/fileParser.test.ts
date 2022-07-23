@@ -1,7 +1,7 @@
-import { FileParser } from '../src/fileParser'
-import fs from 'fs'
+import { FileParser } from "../src/fileParser";
+import fs from "fs";
 
-jest.mock('fs')
+jest.mock("fs");
 
 const DATA = `
 ---
@@ -168,106 +168,104 @@ ${record}
 
 `;
 
-const FILE_NAME = 'sample.txt';
+const FILE_NAME = "sample.txt";
 
-describe('fileParser', () => {
-    const readFileSyncMocked = fs.readFileSync as jest.Mock;
-    let parser: FileParser;
+describe("fileParser", () => {
+  const readFileSyncMocked = fs.readFileSync as jest.Mock;
+  let parser: FileParser;
 
-    beforeEach(() => {
-        parser = new FileParser(FILE_NAME);
-        jest.resetAllMocks();
-    });
+  beforeEach(() => {
+    parser = new FileParser(FILE_NAME);
+    jest.resetAllMocks();
+  });
 
-    test.each([
-        DATA,
-        DATA_ONLY_WITH_METADATA,
-        DATA_WITH_UNCLOSED_METADATA,
-        DATA_WITHOUT_NEW_LINES
-    ])('parse valid data', (data: string) => {
-        readFileSyncMocked.mockReturnValue(data);
+  test.each([
+    DATA,
+    DATA_ONLY_WITH_METADATA,
+    DATA_WITH_UNCLOSED_METADATA,
+    DATA_WITHOUT_NEW_LINES,
+  ])("parse valid data", (data: string) => {
+    readFileSyncMocked.mockReturnValue(data);
 
-        expect(parser.parse()).toMatchSnapshot();
-    });
+    expect(parser.parse()).toMatchSnapshot();
+  });
 
-    test.each([
-        DATA_WITHOUT_METADATA,
-        UNKNOWN_PROJECT,
-        UNKNOWN_PROJECT_2
-    ])('parse unknown project', (data: string) => {
-        readFileSyncMocked.mockReturnValue(data);
+  test.each([DATA_WITHOUT_METADATA, UNKNOWN_PROJECT, UNKNOWN_PROJECT_2])(
+    "parse unknown project",
+    (data: string) => {
+      readFileSyncMocked.mockReturnValue(data);
 
-        expect(parser.parse.bind(parser)).toThrowError('unknown project');
-    });
+      expect(parser.parse.bind(parser)).toThrowError("unknown project");
+    }
+  );
 
-    test.each([
-        DUPLICATED_METADATA,
-        DUPLICATED_METADATA_2,
-        DUPLICATED_METADATA_3
-    ])('parse duplicated metadata', (data: string) => {
-        readFileSyncMocked.mockReturnValue(data);
+  test.each([
+    DUPLICATED_METADATA,
+    DUPLICATED_METADATA_2,
+    DUPLICATED_METADATA_3,
+  ])("parse duplicated metadata", (data: string) => {
+    readFileSyncMocked.mockReturnValue(data);
 
-        expect(parser.parse.bind(parser)).toThrowError('duplicated metadata project');
-    });
+    expect(parser.parse.bind(parser)).toThrowError(
+      "duplicated metadata project"
+    );
+  });
 
-    test('parse duplicated record', () => {
-        readFileSyncMocked.mockReturnValue(DUPLICATED_RECORD);
+  test("parse duplicated record", () => {
+    readFileSyncMocked.mockReturnValue(DUPLICATED_RECORD);
 
-        expect(parser.parse.bind(parser)).toThrowError('duplicated project record');
-    });
+    expect(parser.parse.bind(parser)).toThrowError("duplicated project record");
+  });
 
-    test('parse invalid file', () => {
-        readFileSyncMocked.mockReturnValue('dummy');
+  test("parse invalid file", () => {
+    readFileSyncMocked.mockReturnValue("dummy");
 
-        expect(parser.parse()).toMatchSnapshot();
-    });
+    expect(parser.parse()).toMatchSnapshot();
+  });
 
-    test.each([
-        '2022-99-22',
-        '2022-05-99',
-        '2022-02-30',
-    ])('parse invalid date %p', (date: string) => {
-        readFileSyncMocked.mockReturnValue(dataWithInvalidDate(date));
+  test.each(["2022-99-22", "2022-05-99", "2022-02-30"])(
+    "parse invalid date %p",
+    (date: string) => {
+      readFileSyncMocked.mockReturnValue(dataWithInvalidDate(date));
 
-        expect(parser.parse.bind(parser)).toThrowError('invalid date');
-    });
+      expect(parser.parse.bind(parser)).toThrowError("invalid date");
+    }
+  );
 
-    test.each([
-        'dummy',
-        '-1',
-        '0',
-        '6',
-        Number.NEGATIVE_INFINITY,
-        Number.POSITIVE_INFINITY,
-        Number.MAX_SAFE_INTEGER,
-        Number.MIN_SAFE_INTEGER,
-    ])('parse invalid mark %p', (mark: string) => {
-        readFileSyncMocked.mockReturnValue(dataWithInvalidMark(mark));
+  test.each([
+    "dummy",
+    "-1",
+    "0",
+    "6",
+    Number.NEGATIVE_INFINITY,
+    Number.POSITIVE_INFINITY,
+    Number.MAX_SAFE_INTEGER,
+    Number.MIN_SAFE_INTEGER,
+  ])("parse invalid mark %p", (mark: string) => {
+    readFileSyncMocked.mockReturnValue(dataWithInvalidMark(mark));
 
-        expect(parser.parse.bind(parser)).toThrowError('invalid mark');
-    });
+    expect(parser.parse.bind(parser)).toThrowError("invalid mark");
+  });
 
-    test.each([
-        'dummy',
-        '12345',
-        '- 1abcde',
-        '- test%',
-        '- test&',
-    ])('parse invalid metdata project %p', (project: string) => {
-        readFileSyncMocked.mockReturnValue(dataWithInvalidMetadataProject(project));
+  test.each(["dummy", "12345", "- 1abcde", "- test%", "- test&"])(
+    "parse invalid metdata project %p",
+    (project: string) => {
+      readFileSyncMocked.mockReturnValue(
+        dataWithInvalidMetadataProject(project)
+      );
 
-        expect(parser.parse.bind(parser)).toThrowError('invalid metadata project');
-    });
+      expect(parser.parse.bind(parser)).toThrowError(
+        "invalid metadata project"
+      );
+    }
+  );
 
-    test.each([
-        'dummy',
-        '1:1',
-        '-t:1',
-        't%:1',
-        'test^:1',
-    ])('parse invalid record %p', (record: string) => {
-        readFileSyncMocked.mockReturnValue(dataWithInvalidRecord(record));
+  test.each(["dummy", "1:1", "-t:1", "t%:1", "test^:1"])(
+    "parse invalid record %p",
+    (record: string) => {
+      readFileSyncMocked.mockReturnValue(dataWithInvalidRecord(record));
 
-        expect(parser.parse.bind(parser)).toThrowError();
-    });
+      expect(parser.parse.bind(parser)).toThrowError();
+    }
+  );
 });
