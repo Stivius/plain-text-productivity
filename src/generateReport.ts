@@ -10,6 +10,7 @@ export function generateReport(
   data: FileData,
   options: ProductivityReportOptions
 ): ProductivityReport {
+  const depth = options.depth;
   const groupedData = chain(data.records)
     .filter((r) => r.day >= options.from && r.day <= options.to)
     .map((r) => r.projects)
@@ -19,7 +20,7 @@ export function generateReport(
         data.metadata.activeProjects.find(searchForCompoundProject(p.name)) !==
         undefined
     )
-    .groupBy((assesed) => assesed.name);
+    .groupBy((assesed) => (depth ? assesed.name.depth(depth) : assesed.name));
   const averageMarkByProject = groupedData.map((group, groupName) => {
     const groupSum = sumBy(group, (assesed) => assesed.mark);
     const filteredGroup = filter(
@@ -42,8 +43,5 @@ export function generateReport(
       };
     })
     .value();
-  return {
-    items: items,
-    options: options,
-  };
+  return { items, options };
 }

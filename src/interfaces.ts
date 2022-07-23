@@ -25,6 +25,7 @@ export interface FileData {
 export interface ProductivityReportOptions {
   from: Date;
   to: Date;
+  depth: number;
   absolute: boolean;
   choice: number;
 }

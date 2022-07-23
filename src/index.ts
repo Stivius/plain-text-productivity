@@ -60,6 +60,7 @@ export default async function () {
         const optionDefinitions = [
           { name: "absolute", type: Boolean, defaultValue: false },
           { name: "range-type", type: Number },
+          { name: "depth", type: Number },
           { name: "from-date", type: String },
           { name: "to-date", type: String },
         ];
@@ -71,7 +72,6 @@ export default async function () {
           if (rangeType === undefined) {
             return readRangeChoiceFromConsole();
           } else {
-            // TODO: can be entered as string and converted to number
             if (rangeType === 0) {
               const from = new Date(options["from-date"]);
               const to = new Date(options["to-date"]);
@@ -90,6 +90,7 @@ export default async function () {
             generateReport(data, {
               from,
               to,
+              depth: options.depth,
               absolute: options.absolute,
               choice,
             })

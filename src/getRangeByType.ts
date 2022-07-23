@@ -30,7 +30,6 @@ const beginingOf = (aggregation: BeginningOf) => {
   }
 };
 
-// TODO: change number to enum
 export function getRangeByType(choice: number) {
   if (isNaN(choice) || choice < 1 || choice > 10) {
     throw new Error(`${choice} is not valid range type`);

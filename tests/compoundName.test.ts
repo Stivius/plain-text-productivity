@@ -34,6 +34,27 @@ describe("CompoundName", () => {
     expect(construct).toThrowError();
   });
 
+  test("depth - 1-level", () => {
+    const name = new CompoundName("1");
+    expect(() => name.depth(-1)).toThrowError();
+    expect(() => name.depth(0)).toThrowError();
+    expect(name.depth(1)).toEqual("1");
+    expect(name.depth(2)).toEqual("1");
+    expect(name.depth(3)).toEqual("1");
+  });
+
+  test("depth - multi-level", () => {
+    const name = new CompoundName("1/2/3/4");
+    expect(() => name.depth(-1)).toThrowError();
+    expect(() => name.depth(0)).toThrowError();
+    expect(name.depth(1)).toEqual("1");
+    expect(name.depth(2)).toEqual("1/2");
+    expect(name.depth(3)).toEqual("1/2/3");
+    expect(name.depth(4)).toEqual("1/2/3/4");
+    expect(name.depth(5)).toEqual("1/2/3/4");
+    expect(name.depth(6)).toEqual("1/2/3/4");
+  });
+
   test("comparison", () => {
     const prj = (value: string) => new CompoundName(value);
 
